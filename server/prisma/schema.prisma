@@ -1,0 +1,49 @@
+// Prisma Schema for Customer Request Managemnt Potal
+// Database: MySQL (doctordb)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  email        String    @unique @db.VarChar(255)
+  passwordHash String    @map("password_hash") @db.VarChar(255)
+  name         String    @db.VarChar(150)
+  role         String    @default("Administrator") @db.VarChar(50)
+  status       String    @default("Active") @db.VarChar(50)
+  lastLogin    DateTime? @map("last_login")
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  @@map("users")
+}
+
+model OperationalRecord {
+  id          String   @id @db.VarChar(50)
+  title       String   @db.VarChar(255)
+  category    String   @db.VarChar(100)
+  priority    String   @default("Medium") @db.VarChar(50)
+  status      String   @default("Active") @db.VarChar(50)
+  createdDate String   @map("created_date") @db.VarChar(20)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("operational_records")
+}
+
+model AuditLog {
+  id         Int      @id @default(autoincrement())
+  timestamp  String   @db.VarChar(20)
+  userHandle String   @map("user_handle") @db.VarChar(150)
+  action     String   @db.VarChar(100)
+  ipAddress  String   @map("ip_address") @db.VarChar(50)
+  status     String   @default("SUCCESS") @db.VarChar(50)
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@map("audit_logs")
+}
